@@ -26,11 +26,11 @@ namespace CarRentalManagement.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> GetVehicles()
         {
-          if (_unitOfWork.Vehicles == null)
-          {
-              return NotFound();
-          }
-            var vehicles = await _unitOfWork.Vehicles.GetAll();
+            if (_unitOfWork.Vehicles == null)
+            {
+                return NotFound();
+            }
+            var vehicles = await _unitOfWork.Vehicles.GetAll(includes: q => q.Include(x =>x.Make).Include(x => x.Model).Include(x => x.Colour));
             return Ok(vehicles);
         }
 
@@ -38,10 +38,10 @@ namespace CarRentalManagement.Server.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetVehicle(int id)
         {
-          if (_unitOfWork.Vehicles == null)
-          {
-              return NotFound();
-          }
+            if (_unitOfWork.Vehicles == null)
+            {
+                return NotFound();
+            }
             var vehicle = await _unitOfWork.Vehicles.Get(q => q.Id == id);
 
             if (vehicle == null)
@@ -88,14 +88,14 @@ namespace CarRentalManagement.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<Vehicle>> PostVehicle(Vehicle vehicle)
         {
-          if (_unitOfWork.Vehicles == null)
-          {
-              return Problem("Entity set 'ApplicationDbContext.Vehicles'  is null.");
-          }
+            if (_unitOfWork.Vehicles == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.Vehicles'  is null.");
+            }
             await _unitOfWork.Vehicles.Insert(vehicle);
             await _unitOfWork.Save(HttpContext);
 
-            return CreatedAtAction("GetVehicle", new {id = vehicle.Id },vehicle);
+            return CreatedAtAction("GetVehicle", new { id = vehicle.Id }, vehicle);
         }
 
         // DELETE: api/Vehicles/5
@@ -106,7 +106,7 @@ namespace CarRentalManagement.Server.Controllers
             {
                 return NotFound();
             }
-            var vehicle = await _unitOfWork.Vehicles.Get(q=> q.Id == id);
+            var vehicle = await _unitOfWork.Vehicles.Get(q => q.Id == id);
             if (vehicle == null)
             {
                 return NotFound();
@@ -120,7 +120,7 @@ namespace CarRentalManagement.Server.Controllers
 
         private async Task<bool> VehicleExists(int id)
         {
-            var vehicle = await _unitOfWork.Vehicles.Get(q=>q.Id == id);
+            var vehicle = await _unitOfWork.Vehicles.Get(q => q.Id == id);
             return vehicle != null;
         }
     }

@@ -99,3 +99,15 @@ a, .btn-link {
     .loading-progress-text:after {
         content: var(--blazor-load-percentage-text, "Loading");
     }
+
+.custom-table-header {
+    border-style: hidden;
+    border-top: 1px solid rgb(222, 226, 230);
+    border-bottom: 1px solid rgb(222, 226, 230);
+}
+
+.custom-table-header th{
+    padding: 10px 5px;
+    border-bottom: none;
+    text-align: center;
+}
